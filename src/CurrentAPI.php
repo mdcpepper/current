@@ -192,17 +192,9 @@ class CurrentAPI
 	*/
 	private function params($array)
 	{
-		$str = "";
-		$i = 0;
+        $params = http_build_query($array);
+        $params = preg_replace('/%5B[0-9]+%5D/simU', '%5B%5D', $params);
 
-		foreach($array as $a => $k) {
-			$str .= $a."=".$k;
-
-			if(++$i != count($array)) {
-				$str .= "&";
-			}
-		}
-
-		return $str;
+        return $params;
 	}
 }
