@@ -3,6 +3,7 @@
 namespace Completeequipmentgroup\Current;
 
 use Carbon\Carbon;
+use GuzzleHttp\HandlerStack;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -12,6 +13,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
+use Spatie\GuzzleRateLimiterMiddleware\RateLimiterMiddleware;
 
 class CurrentAPI
 {
@@ -22,7 +24,11 @@ class CurrentAPI
 		$this->cache_length = Config::get('current.cache_length');
 		$this->log_message = "currentrms/api/v".Config::get('current.version');
 
+		$stack = HandlerStack::create();
+		$stack->push(RateLimiterMiddleware::perMinute(45));
+
 		$this->client = new Client([
+		    'handler' => $stack,
 			'cookies' => false,
 			'headers' => array(
 				"X-AUTH-TOKEN" => Config::get('current.api_key'),
