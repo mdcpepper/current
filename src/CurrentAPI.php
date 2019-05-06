@@ -25,7 +25,7 @@ class CurrentAPI
 		$this->log_message = "currentrms/api/v".Config::get('current.version');
 
 		$stack = HandlerStack::create();
-		$stack->push(RateLimiterMiddleware::perMinute(45));
+		$stack->push(RateLimiterMiddleware::perMinute(55));
 
 		$this->client = new Client([
 		    'handler' => $stack,
